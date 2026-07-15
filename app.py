@@ -4,13 +4,14 @@ import pandas as pd
 # 1. 웹페이지 기본 설정 및 미려한 CSS 스타일
 st.set_page_config(page_title="청소년 피로도 지수(PFI) 진단", page_icon="🧘", layout="centered")
 
-# 깔끔하고 가독성 높은 스타일시트 적용
+# [업그레이드] 글자 끊김 방지(keep-all) 및 가독성을 극대화한 CSS
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
     
     html, body, [class*="css"] {
         font-family: 'Noto Sans KR', sans-serif;
+        word-break: keep-all; /* 단어 단위로 줄바꿈되어 글자가 어색하게 잘리는 현상 방지 */
     }
     
     /* 성과압박 카드 */
@@ -20,6 +21,7 @@ st.markdown("""
         padding: 18px;
         border-radius: 10px;
         margin-bottom: 20px;
+        word-break: keep-all;
     }
     
     /* 회복수준 카드 */
@@ -29,6 +31,7 @@ st.markdown("""
         padding: 18px;
         border-radius: 10px;
         margin-bottom: 20px;
+        word-break: keep-all;
     }
     
     /* 결과 박스 */
@@ -39,6 +42,7 @@ st.markdown("""
         border-radius: 14px;
         margin-top: 20px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        word-break: keep-all;
     }
     
     .q-text {
@@ -46,25 +50,38 @@ st.markdown("""
         font-weight: 500;
         color: #1E293B;
         margin-bottom: 6px;
+        line-height: 1.5;
+        word-break: keep-all;
+    }
+    
+    .stMarkdown p {
+        word-break: keep-all;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# 2. 설문 문항 정의
+# 2. 원본 17문항 데이터 정의 (SA 7개, RA 10개)
 sa_questions = [
     "나는 남들보다 뒤처지면 안 된다는 불안감을 자주 느낀다.",
-    "나에게 설정한 학업 및 성장 목표는 스스로에게 매우 높은 편이다.",
-    "시험 성적이나 성과가 떨어지면 내 존재 가치마저 낮아지는 것 같다.",
-    "아무것도 하지 않고 쉴 때조차 불안해서 무언가 학습을 해야 할 것 같다.",
-    "부모님, 선생님, 혹은 친구들의 기대에 부응해야 한다는 부담감이 크다."
+    "나에게 설정한 학습 목표는 타인이나 스스로에게 매우 높은 편이다.",
+    "시험 성적이 떨어지면 내 존재 가치가 낮아지는 것 같다.",
+    "아무것도 하지 않고 쉬는 시간에는 불안해서 무언가 해야 할 것 같다.",
+    "나를 끊임없이 계발하고 채찍질해야 마음이 놓인다.",
+    "주변(부모님, 선생님, 친구들)의 기대에 부응해야 한다는 부담감이 크다.",
+    "미래의 성공을 위해 지금의 힘듦은 당연히 참아야 한다고 생각한다."
 ]
 
 ra_questions = [
-    "하루 평균 6~7시간 이상의 규칙적이고 질 좋은 수면을 취하고 있다.",
-    "지치고 피곤할 때 언제든 완전히 방해받지 않고 쉴 수 있는 나만의 시공간이 있다.",
-    "학업 스트레스를 완전히 잊고 몰입할 수 있는 나만의 확실한 활동이나 취미가 있다.",
-    "불안하거나 힘들 때 언제든 마음을 터놓고 의지할 수 있는 사람(친구, 가족 등)이 있다.",
-    "내 몸과 마음이 한계에 도달했다는 위험 신호를 스스로 인지하고 휴식을 결정할 수 있다."
+    "하루 평균 6~7시간 이상의 양질의 수면을 취하고 있다.",
+    "피곤할 때 언제든 편하게 쉴 수 있는 나만의 공간이나 시간이 있다.",
+    "지친 마음을 달래줄 수 있는 나만의 확실한 취미 생활이 있다.",
+    "스트레스를 받았을 때 건강하게 해소하는 구체적인 방법을 알고 실행한다.",
+    "불안하거나 힘들 때 마음을 터놓고 이야기할 수 있는 사람이 있다.",
+    "하루 중 아무 생각 없이 온전히 쉴 수 있는 '멍 때리는' 시간이 있다.",
+    "비교적 사소한 일에도 긍정적인 감정을 느끼고 여유를 가질 수 있다.",
+    "주말이나 휴일에는 학업 생각을 잊고 충분히 리프레시한다.",
+    "나의 신체적, 정신적 한계를 스스로 인지하고 조절할 수 있다.",
+    "하루의 일과 끝에 내 마음 상태를 돌아보고 챙겨주는 편이다."
 ]
 
 # 세션 상태 제어
@@ -81,9 +98,9 @@ def reset_survey():
 if not st.session_state.show_result:
     
     st.markdown("""
-    <div style="text-align: center; margin-bottom: 25px;">
+    <div style="text-align: center; margin-bottom: 25px; word-break: keep-all;">
         <h1 style="color: #0F172A; font-weight: 700; font-size: 2.1rem; margin-bottom: 8px;">
-            🧘 청소년 피로도 지수(PFI) 진단
+            🧘 청소년 피로도 지수(PFI) 자가진단
         </h1>
         <p style="color: #64748B; font-size: 0.95rem; line-height: 1.5;">
             스스로를 다그치는 <b>성과압박(SA)</b>과 충전 에너지인 <b>회복수준(RA)</b>을 다차원적으로 평가하여<br>
@@ -98,11 +115,11 @@ if not st.session_state.show_result:
     score_map = {"전혀 아니다": 1, "아니다": 2, "보통이다": 3, "그렇다": 4, "매우 그렇다": 5}
     
     with st.form("pfi_survey_form"):
-        # Section 1. 성과압박
+        # Section 1. 성과압박 (7문항)
         st.markdown("""
         <div class="sa-card">
             <h4 style="color: #D32F2F; margin: 0 0 5px 0; font-weight: 700;">Section 1. 성과압박 (Success Pressure)</h4>
-            <p style="color: #C62828; font-size: 0.85rem; margin: 0;">학업 성과에 대한 집착, 주변의 기대감, 실패에 대한 불안 지수</p>
+            <p style="color: #C62828; font-size: 0.85rem; margin: 0;">나를 갉아먹는 학습 성과에 대한 집착, 주변의 기대감, 실패에 대한 불안 지수를 측정합니다.</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -115,17 +132,17 @@ if not st.session_state.show_result:
             
         st.markdown("---")
         
-        # Section 2. 회복수준
+        # Section 2. 회복수준 (10문항)
         st.markdown("""
         <div class="ra-card">
             <h4 style="color: #2E7D32; margin: 0 0 5px 0; font-weight: 700;">Section 2. 회복 수준 (Recovery Ability)</h4>
-            <p style="color: #1B5E20; font-size: 0.85rem; margin: 0;">건강한 수면 환경, 스트레스 방어 및 심리적 완충 능력</p>
+            <p style="color: #1B5E20; font-size: 0.85rem; margin: 0;">피로를 밀어내는 건강한 신체 수면 환경, 스트레스 방어 및 심리적 완충 능력을 측정합니다.</p>
         </div>
         """, unsafe_allow_html=True)
         
         ra_answers = []
         for i, q in enumerate(ra_questions):
-            st.markdown(f'<p class="q-text"><b>Q{i+6}.</b> {q}</p>', unsafe_allow_html=True)
+            st.markdown(f'<p class="q-text"><b>Q{i+8}.</b> {q}</p>', unsafe_allow_html=True)
             choice = st.radio(f"ra_{i}", options=options, index=2, horizontal=True, label_visibility="collapsed")
             ra_answers.append(score_map[choice])
             st.markdown("<div style='margin-bottom: 12px;'></div>", unsafe_allow_html=True)
@@ -159,14 +176,14 @@ else:
     ra_avg = data["ra_avg"]
     pfi_percentage = data["pfi"]
     
-    # 1. 4가지 핵심 유형 판정 로직 (기준값 3.0점)
+    # 4가지 핵심 유형 판정 로직 (기준값 3.0점)
     threshold = 3.0
     
     if sa_avg < threshold and ra_avg >= threshold:
         # 🌿 Recovery Type (회복 충분)
         type_emoji = "🌿"
         type_id = "Recovery Type"
-        type_title = "회복 충분 유형"
+        type_title = "Recovery Type (회복 충분 유형)"
         status_color = "#4CAF50"
         
         key_issue = "현재 균형 유지"
@@ -179,13 +196,13 @@ else:
             "바쁜 학기 중에도 자신만의 스트레스 해소 시간(코인노래방, 산책 등) 거르지 않기",
             "학습 목표를 세울 때 신체 한계를 시험하는 무리한 계획으로 넘어가지 않기"
         ]
-        sample_text = "현재 충분한 회복 능력을 가지고 있습니다. 높은 성과보다 지속 가능한 생활 균형을 유지하는 것이 핵심입니다."
+        sample_text = "현재 충분한 회복 능력을 가지고 있습니다. 높은 성과보다 지속 가능한 생활 균형을 유지하는 것이 중요합니다."
         
     elif sa_avg >= threshold and ra_avg >= threshold:
-        # 🎯 Challenge Type (도전형 - 성과도 높고 회복도 높음)
+        # 🎯 Challenge Type (도전형)
         type_emoji = "🎯"
         type_id = "Challenge Type"
-        type_title = "도전형 (High SA, High RA)"
+        type_title = "Challenge Type (도전형)"
         status_color = "#2196F3"
         
         key_issue = "가속 뒤의 브레이크 확인"
@@ -201,10 +218,10 @@ else:
         sample_text = "뜨거운 열정만큼 회복하는 법도 잘 아는 훌륭한 상태입니다. 지치지 않는 영리한 완급 조절이 무기입니다."
 
     elif sa_avg >= threshold and ra_avg < threshold:
-        # 🔥 Overdrive Type (성과압박 과다 / 번아웃 고위험)
+        # 🔥 Overdrive Type (성과압박 과다)
         type_emoji = "🔥"
         type_id = "Overdrive Type"
-        type_title = "성과과부하 고위험군"
+        type_title = "Overdrive Type (성과과부하 유형)"
         status_color = "#FF5722"
         
         key_issue = "끊임없이 더 잘해야 한다는 압박 (자기착취)"
@@ -220,10 +237,10 @@ else:
         sample_text = "높은 목표 의식은 좋으나 스스로를 낭떠러지로 몰아세우고 있습니다. 노력의 양보다 '지속 가능한 방식'을 찾는 것이 우선입니다."
 
     else: # sa_avg < threshold and ra_avg < threshold
-        # 🌧 Fatigue Type (피로 누적 / 회복 부족)
+        # 🌧 Fatigue Type (피로 누적)
         type_emoji = "🌧"
         type_id = "Fatigue Type"
-        type_title = "피로 누적 유형"
+        type_title = "Fatigue Type (피로 누적 유형)"
         status_color = "#9C27B0"
         
         key_issue = "너무 많이 하는 것보다 회복의 절대적 부족"
@@ -240,7 +257,7 @@ else:
 
     # 3. 결과 대시보드 렌더링
     st.markdown("""
-    <div style="text-align: center; margin-top: 15px;">
+    <div style="text-align: center; margin-top: 15px; word-break: keep-all;">
         <h2 style="color: #0F172A; font-weight: 700; margin-bottom: 5px;">📊 나의 진단 결과 리포트</h2>
     </div>
     """, unsafe_allow_html=True)
@@ -269,7 +286,7 @@ else:
     
     st.markdown("---")
 
-    # 4. [요청 사항] 한눈에 보기 쉬운 4대 유형 총괄 표 구현
+    # 4. 피로도 유형 총괄 표 구현
     st.markdown("### 📋 피로도 유형 총괄 요약")
     
     summary_data = {
@@ -281,7 +298,6 @@ else:
     
     df_summary = pd.DataFrame(summary_data)
     
-    # 마크다운 표 스타일을 세련되게 변형하여 노출
     st.dataframe(
         df_summary, 
         use_container_width=True, 
@@ -290,13 +306,15 @@ else:
     
     st.markdown("---")
     
-    # 5. 개인 유형별 상세 진단 리포트 출력 (핵심 위주로 깔끔하게)
+    # 5. 개인 유형별 상세 진단 리포트 출력
     st.markdown(f"### 상세 분석: {type_emoji} {type_title}")
     
     st.markdown(f"""
-    > **📢 한줄 진단**  
-    > *"{sample_text}"*
-    """)
+    <div style="background-color: #F8FAFC; border-radius: 8px; padding: 15px; border-left: 4px solid {status_color}; margin-bottom: 20px; word-break: keep-all;">
+        <strong>📢 한줄 진단</strong><br>
+        <p style="margin: 5px 0 0 0; color: #334155;"><em>"{sample_text}"</em></p>
+    </div>
+    """, unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     with col1:
