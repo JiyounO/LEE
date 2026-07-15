@@ -1,3 +1,4 @@
+%%writefile app.py
 import streamlit as st
 import pandas as pd
 
@@ -56,7 +57,7 @@ st.markdown("""
         margin: 0 !important;
     }
     
-    /* 회복경험 카드 (텍스트 크기 축소) */
+    /* 회복역량 카드 (텍스트 크기 축소) */
     .ra-card {
         background-color: #F0F9F4;
         border-left: 5px solid #4CAF50;
@@ -114,7 +115,6 @@ sp_questions = [
     "휴식을 취하면서도 공부를 해야 한다는 생각이 자주 들었다."
 ]
 
-# [수정] 새로 보내주신 Q9 ~ Q18 회복경험 문항으로 교체 완료
 ra_questions = [
     "나는 바쁜 일정 속에서도 충분히 쉬는 시간을 확보하는 편이다.",
     "휴식을 취한 후에는 다시 집중할 수 있는 힘을 회복하는 편이다.",
@@ -147,7 +147,7 @@ if not st.session_state.show_result:
             🧘 청소년 피로도 지수(PFI) 자가진단
         </h1>
         <p style="color: #64748B; font-size: 0.85rem; line-height: 1.4;">
-            스스로를 다그치는 성과압박(SP)과 충전 에너지인 회복경험(RA)을 다차원적으로 평가하여<br>
+            스스로를 다그치는 성과압박(SP)과 나의 충전 에너지인 회복역량(RC)을 다차원적으로 평가하여<br>
             현재 나의 심리적 피로도를 정밀하게 측정합니다.
         </p>
     </div>
@@ -155,9 +155,9 @@ if not st.session_state.show_result:
     
     st.markdown("---")
     
-    # 공통 라벨 옵션
-    options = ["전혀 그렇지 않았다", "그렇지 않았다", "보통이다", "그렇다", "매우 그렇다"]
-    score_map = {"전혀 그렇지 않았다": 1, "그렇지 않았다": 2, "보통이다": 3, "그렇다": 4, "매우 그렇다": 5}
+    # [수정] 피로도 조사에 맞게 현재형(~다)으로 옵션 변경
+    options = ["전혀 그렇지 않다", "그렇지 않다", "보통이다", "그렇다", "매우 그렇다"]
+    score_map = {"전혀 그렇지 않다": 1, "그렇지 않다": 2, "보통이다": 3, "그렇다": 4, "매우 그렇다": 5}
     
     with st.form("pfi_survey_form"):
         # Section 1. 성과압박 (8문항)
@@ -179,12 +179,12 @@ if not st.session_state.show_result:
             
         st.markdown("---")
         
-        # Section 2. 회복경험 (10문항)
+        # [수정] Section 2. 명칭 및 안내 문구 교체
         st.markdown("""
         <div class="ra-card">
-            <h4 style="color: #2E7D32; font-weight: 700;">Section 2. 회복경험 (Recovery Experience, RA)</h4>
+            <h4 style="color: #2E7D32; font-weight: 700;">Section 2. 회복역량 (Recovery Capacity, RC)</h4>
             <p style="color: #1B5E20; line-height: 1.4;">
-                다음 문항은 최근 한 달 동안 학교 수업과 공부를 마친 후 얼마나 충분히 휴식하고 회복했는지에 관한 내용입니다. 자신의 경험과 가장 가까운 정도를 선택해 주세요.
+                다음 문항은 평소 학업으로 인한 피로를 어떻게 회복하는지와 회복 역량에 관한 내용입니다. 자신의 평소 모습과 가장 가까운 정도를 선택해 주세요.
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -330,7 +330,7 @@ else:
     </div>
     """, unsafe_allow_html=True)
 
-    # [유형, 점수 카드 구성]
+    # [유형, 점수 카드 구성] (RA 표기를 RC/회복역량으로 유기적으로 시각화)
     st.markdown(f"""
     <div class="result-card" style="border-top: 5px solid {status_color};">
         <div style="text-align: center; margin-bottom: 12px;">
@@ -346,7 +346,7 @@ else:
             </div>
             <div style="border-left: 1px solid #E2E8F0;"></div>
             <div>
-                <p style="margin: 0; color: #388E3C; font-size: 0.75rem; font-weight: 600;">🧘 회복경험 평균 (RA)</p>
+                <p style="margin: 0; color: #388E3C; font-size: 0.75rem; font-weight: 600;">🧘 회복역량 평균 (RC)</p>
                 <p style="margin: 3px 0 0 0; font-size: 1.1rem; font-weight: 700; color: #1E293B;">{ra_avg:.2f} <span style="font-size: 0.75rem; font-weight: 400; color: #94A3B8;">/ 5</span></p>
             </div>
         </div>
@@ -363,10 +363,8 @@ else:
     """, unsafe_allow_html=True)
 
     # 5. PFI 점수 vs 주관적 인지 피로도의 격차 분석 피드백
-    # 주관적 피로 점수를 백분율 느낌으로 대치 (1->10%, 2->30%, 3->50%, 4->70%, 5->90%)
     subjective_mapped = [10, 30, 50, 70, 90][subjective_score - 1]
     gap = pfi_percentage - subjective_mapped
-    
     sub_text = ["매우 낮음", "낮음", "보통", "높음", "매우 높음"][subjective_score - 1]
     
     st.markdown("### 💡 피로 인식 격차 분석 (PFI vs 주관적 체감)")
