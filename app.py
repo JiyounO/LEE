@@ -68,7 +68,7 @@ sp_questions = [
     "쉬고 있을 때에도 공부나 해야 할 일이 계속 떠올랐다.",
     "스스로에게 높은 학업 성과를 기대했다.",
     "기대한 만큼의 성과를 내지 못했을 때 스스로를 많이 탓했다.",
-    "우리 학교는 성적과 결과를 중요하게 여는 분위기라고 느꼈다.",
+    "우리 학교는 성적과 결과를 중요하게 여기는 분위기라고 느꼈다.",
     "휴식을 취하면서도 공부를 해야 한다는 생각이 자주 들었다."
 ]
 
@@ -122,7 +122,7 @@ if not st.session_state.show_result:
         <div class="sp-card">
             <h4 style="color: #D32F2F; margin: 0 0 5px 0; font-weight: 700;">Section 1. 성과압박 (Success Pressure, SP)</h4>
             <p style="color: #C62828; font-size: 0.88rem; margin: 0; line-height: 1.5;">
-                <b>[안내문]</b> 다음 문항은 최근 한 달 동안 학교생활과 학업을 하면서 느낀 경험에 관한 내용입니다. 각 문항을 읽고 자신의 경험과 가장 가까운 정도를 선택해 주세요.
+                다음 문항은 최근 한 달 동안 학교생활과 학업을 하면서 느낀 경험에 관한 내용입니다. 각 문항을 읽고 자신의 경험과 가장 가까운 정도를 선택해 주세요.
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -141,7 +141,7 @@ if not st.session_state.show_result:
         <div class="ra-card">
             <h4 style="color: #2E7D32; margin: 0 0 5px 0; font-weight: 700;">Section 2. 회복경험 (Recovery Experience, RA)</h4>
             <p style="color: #1B5E20; font-size: 0.88rem; margin: 0; line-height: 1.5;">
-                <b>[안내문]</b> 다음 문항은 최근 한 달 동안 학교 수업과 공부를 마친 후 얼마나 충분히 휴식하고 회복했는지에 관한 내용입니다. 자신의 경험과 가장 가까운 정도를 선택해 주세요.
+                다음 문항은 최근 한 달 동안 학교 수업과 공부를 마친 후 얼마나 충분히 휴식하고 회복했는지에 관한 내용입니다. 자신의 경험과 가장 가까운 정도를 선택해 주세요.
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -155,7 +155,7 @@ if not st.session_state.show_result:
             
         st.markdown("---")
         
-        # Section 3. 주관적 인지 피로도 (점수 비포함 분석용 선택 문항)
+        # Section 3. 주관적 인지 피로도 (분석용 선택 문항)
         st.markdown("""
         <div style="background-color: #F8FAFC; border-left: 5px solid #64748B; padding: 18px; border-radius: 10px; margin-bottom: 20px; word-break: keep-all;">
             <h4 style="color: #334155; margin: 0 0 5px 0; font-weight: 700;">Section 3. 주관적 피로도 (Self-Perceived Fatigue)</h4>
@@ -253,7 +253,7 @@ else:
         
         state_desc = "성과를 향한 압박은 높지만 충분히 회복하지 못하고 있습니다. 지금의 피로는 노력이 부족해서가 아니라, 회복보다 성과를 우선하게 되는 생활 방식에서 비롯될 가능성이 있습니다."
         proposals = [
-            "⚡ **해야 할 일 목록에서 '미뤄도 되는 일' 한 가지를 지워보세요.**  \n→ 모든 일을 같은 중요도로 다루지 않는 것만으로도 부담을 줄일 수 있습니다.",
+            "⚡ **해야 할 일 목록에서 '미뤄도 되는 일' 한 가지를 지워보세요.**  \n→ 모든 일을 같은 중요도로 다루지 않는 것만으로도 부담을 줄있 수 있습니다.",
             "⚡ **공부 시간을 늘리기보다 집중이 잘되는 시간을 찾아보세요.**  \n→ 시간의 양보다 집중의 질을 높이는 것이 더 효율적일 수 있습니다."
         ]
         message_to_me = "잠시 속도를 늦추는 것은 포기가 아닙니다. 더 오래 나아가기 위한 선택입니다."
@@ -263,7 +263,7 @@ else:
         type_emoji = "🌧"
         type_id = "Fatigue Type"
         type_title = "Fatigue Type (피로 누적 유형)"
-        status_color = "#9C27B0"
+        status_color = "#475569"  # 인디고/차분한 그레이스케일 톤으로 개선
         
         state_desc = "성과 압박보다 회복 부족이 피로의 주요 원인으로 나타납니다. 에너지를 계속 사용하는 데 비해 충분히 충전하지 못하고 있는 상태입니다."
         proposals = [
@@ -279,6 +279,7 @@ else:
     </div>
     """, unsafe_allow_html=True)
 
+    # [유형, 점수 카드 구성]
     st.markdown(f"""
     <div class="result-card" style="border-top: 5px solid {status_color};">
         <div style="text-align: center; margin-bottom: 15px;">
@@ -301,7 +302,7 @@ else:
     </div>
     """, unsafe_allow_html=True)
     
-    # 4. 피로 위험도 수준 카드 렌더링
+    # 4. [위치 이동] 피로 위험도 수준 카드를 점수 카드 바로 밑에 배치
     st.markdown(f"""
     <div style="background-color: #FAFAFA; border-left: 5px solid {risk_color}; border-radius: 10px; padding: 18px; margin-top: 20px; word-break: keep-all;">
         <span style="color: {risk_color}; font-weight: 700; font-size: 0.9rem;">⚠️ 피로 위험도 수준</span>
@@ -319,27 +320,18 @@ else:
     
     st.markdown("### 💡 피로 인식 격차 분석 (PFI vs 주관적 체감)")
     
+    # [주관적 피로 문항 내 모든 볼드체(**) 제거 및 보라색을 눈이 편안한 네이비/인디고 그레이로 변경]
     if gap >= 20:
-        gap_desc = f"""
-        현재 검사상 측정된 객관적 피로 지수(**{pfi_percentage}점**)에 비해 본인이 느끼는 주관적 피로(**{sub_text}**)가 상대적으로 매우 낮게 나타납니다. 
-        이는 피로를 의식적으로 무시하며 계속 달리는 **과적응(Over-adaptation) 상태**이거나 한병철 철학에서 말하는 **'자기착취형 성과주체'**의 전형적인 모습일 수 있습니다. 
-        몸과 마음이 보내는 미세한 피로 신호에 더 예민하게 주의를 기울여 보세요.
-        """
+        gap_desc = f"현재 검사상 측정된 객관적 피로 지수({pfi_percentage}점)에 비해 본인이 느끼는 주관적 피로({sub_text})가 상대적으로 매우 낮게 나타납니다. 이는 피로를 의식적으로 무시하며 계속 달리는 과적응(Over-adaptation) 상태이거나 한병철 철학에서 말하는 '자기착취형 성과주체'의 전형적인 모습일 수 있습니다. 몸과 마음이 보내는 미세한 피로 신호에 더 예민하게 주의를 기울여 보세요."
         gap_bg = "#FFF9E6"
         gap_border = "#FFB300"
     elif gap <= -20:
-        gap_desc = f"""
-        현재 객관적 질문들을 조합한 피로 지수(**{pfi_percentage}점**) 대비 본인은 주관적으로 훨씬 심한 피로(**{sub_text}**)를 호소하고 있습니다. 
-        단순한 학업량이나 물리적 수면 부족 이외의 **심리적 탈진, 동기 저하, 스트레스 조절의 한계**가 체감 피로를 급격히 끌어올리고 있을 수 있습니다. 
-        체력을 기르는 것도 좋지만 지금은 마음의 긴장을 이완하는 활동이 우선입니다.
-        """
-        gap_bg = "#F3E5F5"
-        gap_border = "#9C27B0"
+        # 보라색 대신 은은하고 세련된 차콜/인디고 테마 적용
+        gap_desc = f"현재 객관적 질문들을 조합한 피로 지수({pfi_percentage}점) 대비 본인은 주관적으로 훨씬 심한 피로({sub_text})를 호소하고 있습니다. 단순한 학업량이나 물리적 수면 부족 이외의 심리적 탈진, 동기 저하, 스트레스 조절의 한계가 체감 피로를 급격히 끌어올리고 있을 수 있습니다. 체력을 기르는 것도 좋지만 지금은 마음의 긴장을 이완하는 활동이 우선입니다."
+        gap_bg = "#F1F5F9"
+        gap_border = "#64748B"
     else:
-        gap_desc = f"""
-        현재 지표상 피로 지수(**{pfi_percentage}점**)와 스스로가 체감하는 피로 수준(**{sub_text}**)이 매우 일관되게 잘 맞닿아 있습니다. 
-        자신의 에너지를 정확히 모니터링하고 조절하고 있는 훌륭한 상태입니다. 앞으로도 이 감각을 신뢰하며 일상을 스스로 조율해 가세요.
-        """
+        gap_desc = f"현재 지표상 피로 지수({pfi_percentage}점)와 스스로가 체감하는 피로 수준({sub_text})이 매우 일관되게 잘 맞닿아 있습니다. 자신의 에너지를 정확히 모니터링하고 조절하고 있는 훌륭한 상태입니다. 앞으로도 이 감각을 신뢰하며 일상을 스스로 조율해 가세요."
         gap_bg = "#E8F5E9"
         gap_border = "#4CAF50"
 
