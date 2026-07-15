@@ -4,14 +4,14 @@ import pandas as pd
 # 1. 웹페이지 기본 설정 및 미려한 CSS 스타일
 st.set_page_config(page_title="청소년 피로도 지수(PFI) 진단", page_icon="🧘", layout="centered")
 
-# [업그레이드] 글자 끊김 방지(keep-all) 및 가독성을 극대화한 CSS
+# [글자 끊김 방지 및 UI 가독성을 극대화한 CSS]
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
     
     html, body, [class*="css"] {
         font-family: 'Noto Sans KR', sans-serif;
-        word-break: keep-all; /* 단어 단위로 줄바꿈되어 글자가 어색하게 잘리는 현상 방지 */
+        word-break: keep-all; /* 단어 단위 줄바꿈으로 가독성 향상 */
     }
     
     /* 성과압박 카드 */
@@ -180,23 +180,20 @@ else:
     threshold = 3.0
     
     if sa_avg < threshold and ra_avg >= threshold:
-        # 🌿 Recovery Type (회복 충분)
+        # 🌿 Recovery Type (회복 충분 유형)
         type_emoji = "🌿"
         type_id = "Recovery Type"
         type_title = "Recovery Type (회복 충분 유형)"
         status_color = "#4CAF50"
         
-        key_issue = "현재 균형 유지"
-        keywords = "안정적 회복 및 셀프 케어 지속"
+        state_desc = "현재 피로 관리 능력이 좋은 상태. 다만 학업량 증가 시 균형이 깨질 수 있음."
+        sample_text = "현재 당신은 학업과 회복 사이의 균형을 잘 유지하고 있습니다. 높은 성과를 위해 무리하기보다, 지금 가지고 있는 회복 습관을 지키는 것이 앞으로의 지속적인 성장에 도움이 됩니다."
         
-        features = ["회복 수준(RA)이 높고 스트레스 자가 조절 능력이 뛰어남.", "현재 신체 및 심리적 균형이 비교적 안정적임."]
-        direction = "현재의 효율적인 회복 시스템을 유지하고 학습과의 균형 예방적 관리"
         proposals = [
-            "현재 좋은 퀄리티를 보이는 수면·휴식 루틴을 타협하지 말고 유지하기",
-            "바쁜 학기 중에도 자신만의 스트레스 해소 시간(코인노래방, 산책 등) 거르지 않기",
-            "학습 목표를 세울 때 신체 한계를 시험하는 무리한 계획으로 넘어가지 않기"
+            "**시험 2주 전부터 수면 시간 확보 계획 세우기**  \n→ 시험 직전에 수면을 몰아서 급격히 줄이는 패턴을 미리 방지합니다.",
+            "**주 1회 '학업 없는 시간' 확보하기**  \n→ 단순히 공부 효율을 높이기 위함이 아니라, 장기적인 뇌의 회복 능력을 유지하는 목적입니다.",
+            "**현재 효과가 있는 회복 활동 기록해두기**  \n→ 가벼운 산책, 운동, 취미 등 나에게 가장 잘 맞는 회복 루틴을 지속해 나갑니다."
         ]
-        sample_text = "현재 충분한 회복 능력을 가지고 있습니다. 높은 성과보다 지속 가능한 생활 균형을 유지하는 것이 중요합니다."
         
     elif sa_avg >= threshold and ra_avg >= threshold:
         # 🎯 Challenge Type (도전형)
@@ -205,55 +202,46 @@ else:
         type_title = "Challenge Type (도전형)"
         status_color = "#2196F3"
         
-        key_issue = "가속 뒤의 브레이크 확인"
-        keywords = "적절한 오프(Off) 스위치 확보"
+        state_desc = "목표 의식과 회복 능력이 모두 높은 상태. 다만 과도한 목표 설정 시 위험 가능."
+        sample_text = "당신은 높은 목표를 향해 나아가는 힘과 스스로 회복하는 능력을 함께 가지고 있습니다. 더 멀리 나아가기 위해서는 노력하는 시간만큼 멈추고 충전하는 시간도 중요합니다."
         
-        features = ["열정이 높고 성취 의욕도 강하지만, 동시에 쉬어갈 줄 아는 똑똑한 생존자 유형.", "동기부여 수준이 매우 높음."]
-        direction = "높은 텐션을 유지하되 시험 기간 일시적 과부하 방지"
         proposals = [
-            "수행평가 집중 기간처럼 압박이 급증할 때 회복 밸런스가 무너지지 않게 브레이크 점검하기",
-            "플래너를 작성할 때 하루 최소 30분은 '학업 생각 멈춤 세션'을 강제 배치하기",
-            "피로 누적으로 인한 긴장성 두통이나 안구 건조 등 신체 신호를 무시하지 않기"
+            "**플래너 작성 시 '최소 목표'와 '최대 목표' 구분하기**  \n- *최소 목표*: 어떤 상황에서도 반드시 달성할 핵심 계획  \n- *최대 목표*: 여유가 있을 때 추가로 도전해볼 계획",
+            "**시험 기간에도 하루 30분 회복 시간 고정하기**  \n→ 공부를 다 마치고 쉬는 게 아니라, 휴식 시간 자체를 학습 계획표의 정식 일정으로 포함합니다.",
+            "**성과 기준을 '결과'만으로 평가하지 않기**  \n- ❌ *모의고사 등급*에만 집착하기보다  \n- ⭕ *오답 정리 완료, 오늘 계획 실천율* 같은 과정형 목표 위주로 성취감을 얻습니다."
         ]
-        sample_text = "뜨거운 열정만큼 회복하는 법도 잘 아는 훌륭한 상태입니다. 지치지 않는 영리한 완급 조절이 무기입니다."
 
     elif sa_avg >= threshold and ra_avg < threshold:
-        # 🔥 Overdrive Type (성과압박 과다)
-        type_emoji = "🔥"
-        type_id = "Overdrive Type"
-        type_title = "Overdrive Type (성과과부하 유형)"
+        # ⚡ Burnout Type (성과과부하 유형)
+        type_emoji = "⚡"
+        type_id = "Burnout Type"
+        type_title = "Burnout Type (성과과부하 유형)"
         status_color = "#FF5722"
         
-        key_issue = "끊임없이 더 잘해야 한다는 압박 (자기착취)"
-        keywords = "목표 조절 및 완벽주의 완화"
+        state_desc = "성과 압박은 높고 회복은 부족한 가장 위험한 고위험군 유형."
+        sample_text = "현재 당신에게 필요한 것은 더 많은 노력이 아니라, 잠시 속도를 조절하는 시간입니다. 성취를 향한 노력은 충분히 가치 있지만, 회복 없는 노력은 오래 지속되기 어렵습니다."
         
-        features = ["목표 수준과 기대치가 지나치게 높아 스스로를 가혹하게 몰아세움.", "휴식을 취할 때조차 무언가를 안 하면 심한 불안을 느낌."]
-        direction = "타이트한 성과 기준 하향 조정 및 강박적 자기압박 완화"
         proposals = [
-            "목표 설정을 결과 중심('무조건 1등급')에서 과정 중심('오늘 계획한 분량 채우기')으로 바꾸기",
-            "하루 중 아무런 생산적 활동을 하지 않는 '합법적 멍 때리기 시간' 선물하기",
-            "시험 점수가 곧 나의 인간적 가치와 존엄을 정하지 않는다는 사실을 인지하기"
+            "**현재 진행 중인 목표를 '필수'와 '선택'으로 분류하기**  \n- *예시*: 반드시 해야 하는 수행평가(필수) / 하면 좋은 추가 문제풀이(선택)  \n→ 모든 공부 목록을 동일한 우선순위에 두며 자신을 압박하지 않습니다.",
+            "**무작정 공부 시간을 늘리는 대신 '집중 세션' 관리하기**  \n- *기존*: 밤 12시까지 무조건 책상에 버티기  \n- *변경*: 90분 집중 학습 + 10분 온전한 휴식 루틴 반복",
+            "**주 1회 학업 목표를 정기적으로 점검하고 덜어내기**  \n- '이번 주 세웠던 목표가 현실적이었는가?'  \n- '스스로를 망가뜨리지 않기 위해 줄여도 되는 일정은 없는가?'"
         ]
-        sample_text = "높은 목표 의식은 좋으나 스스로를 낭떠러지로 몰아세우고 있습니다. 노력의 양보다 '지속 가능한 방식'을 찾는 것이 우선입니다."
 
     else: # sa_avg < threshold and ra_avg < threshold
-        # 🌧 Fatigue Type (피로 누적)
+        # 🌧 Fatigue Type (피로 누적 유형)
         type_emoji = "🌧"
         type_id = "Fatigue Type"
         type_title = "Fatigue Type (피로 누적 유형)"
         status_color = "#9C27B0"
         
-        key_issue = "너무 많이 하는 것보다 회복의 절대적 부족"
-        keywords = "수면 시간 확보 및 자극 배제"
+        state_desc = "성과 압박 자체보다 절대적인 회복 능력과 환경 부족이 주요 원인."
+        sample_text = "지금의 피로는 부족한 의지의 문제가 아니라, 회복이 필요하다는 신호일 수 있습니다. 더 나아가기 위해서는 먼저 충분히 쉬고 에너지를 다시 채우는 과정이 필요합니다."
         
-        features = ["학업 압박감 자체가 숨 막힐 정도는 아니지만, 생활 리듬이 깨져 에너지가 바닥난 상태.", "만성 피로 호소."]
-        direction = "기본적인 생활 리듬 및 신체 에너지 복원"
         proposals = [
-            "하원 후나 취침 전 침대에 누워 스마트폰(릴스, 쇼츠)을 보며 뇌를 자극하는 행동 줄이기",
-            "단 10분이라도 낮시간에 햇볕을 쬐며 걷는 등의 무자극적 충전 시간 가지기",
-            "우선순위가 낮은 활동을 정리하여 절대적인 밤 수면 시간(최소 6시간 이상) 늘리기"
+            "**취침 및 기상 시간부터 먼저 확실하게 고정하기**  \n→ 평일 취침 시간 변동을 30분 내외로 통제하고, 주말에도 기상 시간이 크게 늦어지지 않게 관리합니다.",
+            "**하루에 10~20분이라도 무자극 회복 활동 배치하기**  \n→ 조용히 산책하기, 가벼운 스트레칭, 음악 감상, 또는 친구와의 수다 시간을 가집니다.",
+            "**해야 할 일의 가짓수를 적극적으로 줄이는 '정리 시간' 가지기**  \n- 매일 밤: '내일 꼭 해야 할 핵심 공부 3개'만 정하고 불필요한 과부하 일정은 삭제합니다."
         ]
-        sample_text = "현재 에너지가 바닥나 피로가 해소되지 못하는 상태입니다. 더 쥐어짜기보다 온전한 수면과 휴식을 챙길 때입니다."
 
     # 3. 결과 대시보드 렌더링
     st.markdown("""
@@ -287,13 +275,12 @@ else:
     st.markdown("---")
 
     # 4. 피로도 유형 총괄 표 구현
-    st.markdown("### 📋 피로도 유형 총괄 요약")
+    st.markdown("### 📋 피로도 유형 핵심 행동 한눈에 보기")
     
     summary_data = {
-        "유형": ["🌿 Recovery", "🎯 Challenge", "🔥 Overdrive", "🌧 Fatigue"],
-        "구분": ["회복 충분", "도전형 (균형)", "성과 압박 과다", "회복 부족"],
-        "핵심 문제": ["안정적 회복", "가속/감속 균형", "끊임없는 학업 부담 (자기착취)", "절대적 충전 시간 부족"],
-        "추천 키워드": ["현재 균형 유지", "적절한 오프 확보", "목표 조절·완벽주의 완화", "수면·휴식 환경 개선"]
+        "유형": ["🌿 Recovery Type", "🎯 Challenge Type", "⚡ Burnout Type", "🌧 Fatigue Type"],
+        "구분": ["회복 충분 유형", "도전형", "성과과부하 유형", "피로 누적 유형"],
+        "핵심 행동": ["현재 회복 습관 유지하기", "목표 관리 + 과부하 예방하기", "목표 줄이기 + 회복 시간 확보하기", "수면·생활 리듬 회복하기"]
     }
     
     df_summary = pd.DataFrame(summary_data)
@@ -309,29 +296,52 @@ else:
     # 5. 개인 유형별 상세 진단 리포트 출력
     st.markdown(f"### 상세 분석: {type_emoji} {type_title}")
     
+    # 상태 진단란
     st.markdown(f"""
     <div style="background-color: #F8FAFC; border-radius: 8px; padding: 15px; border-left: 4px solid {status_color}; margin-bottom: 20px; word-break: keep-all;">
-        <strong>📢 한줄 진단</strong><br>
-        <p style="margin: 5px 0 0 0; color: #334155;"><em>"{sample_text}"</em></p>
+        <strong>📌 나의 상태 진단</strong><br>
+        <p style="margin: 5px 0 0 0; color: #334155; font-size: 0.95rem;">{state_desc}</p>
     </div>
     """, unsafe_allow_html=True)
     
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("**📌 나의 특징 및 문제점**")
-        for ft in features:
-            st.markdown(f"- {ft}")
-            
-    with col2:
-        st.markdown("**🧭 앞으로 나아갈 방향**")
-        st.markdown(f"- **{direction}**")
-        
-    st.markdown("#### 💡 학생을 위한 실천 행동 제안")
+    # 실질적 해결책(Action Plans)
+    st.markdown("#### 💡 학생을 위한 실질적 해결책")
     for prop in proposals:
         st.markdown(f"- {prop}")
+        st.markdown("<div style='margin-bottom: 8px;'></div>", unsafe_allow_html=True)
+        
+    # 결과 문구 예시
+    st.markdown(f"""
+    <div style="background-color: #F1F5F9; border-radius: 8px; padding: 18px; border: 1px solid #E2E8F0; margin-top: 20px; word-break: keep-all;">
+        <strong style="color: #0F172A; font-size: 1rem;">📢 분석 총평</strong><br>
+        <p style="margin: 8px 0 0 0; color: #1E293B; font-weight: 500; font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap;">"{sample_text}"</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    st.markdown("<div style='margin-bottom: 30px;'></div>", unsafe_allow_html=True)
+    st.markdown("---")
+
+    # 6. 전체 공통 메시지 (결과 페이지 가장 하단 배치)
+    st.markdown("""
+    <div style="background-color: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 12px; padding: 22px; text-align: center; margin-top: 25px; margin-bottom: 25px; word-break: keep-all;">
+        <h4 style="margin: 0 0 12px 0; color: #475569; font-weight: 700;">💬 피로를 마주하는 우리의 자세</h4>
+        <p style="color: #475569; font-size: 0.95rem; line-height: 1.7; margin: 0; font-weight: 500;">
+            "피로는 개인의 나약함을 의미하지 않습니다.<br>
+            끊임없는 성과 요구 속에서 나타나는 <b>자연스러운 하나의 신호</b>일 수 있습니다.<br><br>
+            이 진단의 목적은 나를 평가하거나 자책하기 위한 것이 아니라,<br>
+            나에게 필요한 <b>진정한 회복 방향</b>을 찾기 위함입니다.<br><br>
+            <b>나만의 건강한 균형을 찾아가는 것</b>이 지속 가능한 성장의 진짜 시작입니다."
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
     
     if st.button("🔄 처음으로 돌아가기", use_container_width=True):
         reset_survey()
         st.rerun()
+
+# --- [ 화면 공통: ✉️ 글로벌 푸터 문의 영역 ] ---
+st.markdown("""
+    <hr style="border: 0; border-top: 1px solid #E2E8F0; margin-top: 50px; margin-bottom: 20px;">
+    <div style="text-align: center; color: #94A3B8; font-size: 0.85rem; padding-bottom: 30px;">
+        ✉️ <b>문의:</b> <a href="mailto:241511@ggg.hs.kr" style="color: #64748B; text-decoration: underline; font-weight: 500;">241511@ggg.hs.kr</a>
+    </div>
+    """, unsafe_allow_html=True)
