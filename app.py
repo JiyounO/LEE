@@ -1,3 +1,4 @@
+%%writefile app.py
 import streamlit as st
 import pandas as pd
 
@@ -7,7 +8,7 @@ st.set_page_config(page_title="청소년 피로도 지수(PFI) 진단", page_ico
 # [글자 끊김 방지 및 UI 가독성을 극대화한 CSS]
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=300;400;500;700&display=swap');
     
     html, body, [class*="css"] {
         font-family: 'Noto Sans KR', sans-serif;
@@ -24,7 +25,7 @@ st.markdown("""
         word-break: keep-all;
     }
     
-    /* 회복수준 카드 */
+    /* 회복경험 카드 */
     .ra-card {
         background-color: #F0F9F4;
         border-left: 5px solid #4CAF50;
@@ -60,29 +61,29 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 2. 업데이트된 문항 데이터 정의
+# 2. 업데이트된 최종 문항 데이터 정의
 sp_questions = [
-    "좋은 성적을 받아야 한다는 부담감을 느꼈다.",
-    "기대한 성적을 받지 못하면 미래가 불안하다고 느꼈다.",
-    "다른 학생들과 비교하며 성과에 대한 부담을 느꼈다.",
-    "공부를 쉬고 있을 때도 해야 할 일이 떠올라 마음이 편하지 않았다.",
-    "스스로에게 높은 학업 성과를 요구하는 편이다.",
-    "노력한 만큼의 성과를 내지 못하면 스스로를 자책하는 편이다.",
-    "우리 학교는 성적과 결과를 중요하게 여기는 환경이라고 느꼈다.",
-    "휴식을 취하는 동안에도 공부를 해야 한다는 생각이 자주 들었다."  # 피로사회 핵심 문항
+    "좋은 성적을 받아야 한다는 부담을 느꼈다.",
+    "기대한 성적을 받지 못할까 봐 걱정한 적이 있었다.",
+    "다른 학생들과 나를 비교하며 부담을 느꼈다.",
+    "쉬고 있을 때에도 공부나 해야 할 일이 계속 떠올랐다.",
+    "스스로에게 높은 학업 성과를 기대했다.",
+    "기대한 만큼의 성과를 내지 못했을 때 스스로를 많이 탓했다.",
+    "우리 학교는 성적과 결과를 중요하게 여는 분위기라고 느꼈다.",
+    "휴식을 취하면서도 공부를 해야 한다는 생각이 자주 들었다."
 ]
 
 ra_questions = [
-    "공부를 잠시 잊을 수 있었다.",
-    "공부 생각에서 잠시 벗어날 수 있었다.",
-    "학업으로 인한 부담감을 잠시 내려놓을 수 있었다.",
-    "느긋하게 휴식을 취했다.",
-    "편안한 활동을 하며 긴장을 풀었다.",
-    "충분한 휴식 시간을 가졌다.",
-    "여가시간을 보내며 재충전했다.",
-    "내가 하고 싶은 활동을 할 수 있었다.",
+    "공부를 잠시 잊고 편안하게 쉬는 시간을 가졌다.",
+    "충분한 휴식을 취했다고 느꼈다.",
+    "학업으로 인한 부담감을 내려놓고 쉴 수 있었다.",
+    "여가 시간을 보내며 재충전할 수 있었다.",
+    "내가 하고 싶은 활동을 할 시간을 가졌다.",
+    "편안한 활동을 하며 긴장을 풀 수 있었다.",
     "공부와 휴식 시간을 스스로 조절할 수 있었다.",
-    "여가시간을 내가 원하는 방식으로 보낼 수 있었다."
+    "힘들 때 편하게 이야기할 수 있는 사람이 있었다.",
+    "하루를 마친 뒤 피로가 어느 정도 해소되었다고 느꼈다.",
+    "다음 날을 시작할 에너지가 충분하다고 느꼈다."
 ]
 
 # 세션 상태 제어
@@ -112,15 +113,18 @@ if not st.session_state.show_result:
     
     st.markdown("---")
     
-    options = ["전혀 그렇지 않다", "그렇지 않다", "보통이다", "그렇다", "매우 그렇다"]
-    score_map = {"전혀 그렇지 않다": 1, "그렇지 않다": 2, "보통이다": 3, "그렇다": 4, "매우 그렇다": 5}
+    # 공통 라벨 옵션
+    options = ["전혀 그렇지 않았다", "그렇지 않았다", "보통이다", "그렇다", "매우 그렇다"]
+    score_map = {"전혀 그렇지 않았다": 1, "그렇지 않았다": 2, "보통이다": 3, "그렇다": 4, "매우 그렇다": 5}
     
     with st.form("pfi_survey_form"):
         # Section 1. 성과압박 (8문항)
         st.markdown("""
         <div class="sp-card">
             <h4 style="color: #D32F2F; margin: 0 0 5px 0; font-weight: 700;">Section 1. 성과압박 (Success Pressure, SP)</h4>
-            <p style="color: #C62828; font-size: 0.85rem; margin: 0;">나를 갉아먹는 학습 성과에 대한 집착, 주변의 기대감, 실패에 대한 불안 지수를 측정합니다.</p>
+            <p style="color: #C62828; font-size: 0.88rem; margin: 0; line-height: 1.5;">
+                <b>[안내문]</b> 다음 문항은 최근 한 달 동안 학교생활과 학업을 하면서 느낀 경험에 관한 내용입니다. 각 문항을 읽고 자신의 경험과 가장 가까운 정도를 선택해 주세요.
+            </p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -133,11 +137,13 @@ if not st.session_state.show_result:
             
         st.markdown("---")
         
-        # Section 2. 회복수준 (10문항)
+        # Section 2. 회복경험 (10문항)
         st.markdown("""
         <div class="ra-card">
             <h4 style="color: #2E7D32; margin: 0 0 5px 0; font-weight: 700;">Section 2. 회복경험 (Recovery Experience, RA)</h4>
-            <p style="color: #1B5E20; font-size: 0.85rem; margin: 0;">학업 압박으로부터의 심리적 거리두기, 완벽한 이완 및 일상적 충전 경험을 측정합니다.</p>
+            <p style="color: #1B5E20; font-size: 0.88rem; margin: 0; line-height: 1.5;">
+                <b>[안내문]</b> 다음 문항은 최근 한 달 동안 학교 수업과 공부를 마친 후 얼마나 충분히 휴식하고 회복했는지에 관한 내용입니다. 자신의 경험과 가장 가까운 정도를 선택해 주세요.
+            </p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -150,11 +156,11 @@ if not st.session_state.show_result:
             
         st.markdown("---")
         
-        # Section 3. 주관적 인지 피로도 (점수 비포함 보너스 문항)
+        # Section 3. 주관적 인지 피로도 (점수 비포함 분석용 선택 문항)
         st.markdown("""
         <div style="background-color: #F8FAFC; border-left: 5px solid #64748B; padding: 18px; border-radius: 10px; margin-bottom: 20px; word-break: keep-all;">
             <h4 style="color: #334155; margin: 0 0 5px 0; font-weight: 700;">Section 3. 주관적 피로도 (Self-Perceived Fatigue)</h4>
-            <p style="color: #475569; font-size: 0.85rem; margin: 0;">스스로 인지하고 있는 현재의 전반적인 에너지 상태를 체크합니다.</p>
+            <p style="color: #475569; font-size: 0.85rem; margin: 0;">스스로 인지하고 있는 현재의 전반적인 에너지 상태를 선택적으로 체크합니다.</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -289,7 +295,7 @@ else:
             </div>
             <div style="border-left: 1px solid #E2E8F0;"></div>
             <div>
-                <p style="margin: 0; color: #388E3C; font-size: 0.8rem; font-weight: 600;">🧘 회복수준 평균 (RA)</p>
+                <p style="margin: 0; color: #388E3C; font-size: 0.8rem; font-weight: 600;">🧘 회복경험 평균 (RA)</p>
                 <p style="margin: 3px 0 0 0; font-size: 1.25rem; font-weight: 700; color: #1E293B;">{ra_avg:.2f} <span style="font-size: 0.8rem; font-weight: 400; color: #94A3B8;">/ 5</span></p>
             </div>
         </div>
