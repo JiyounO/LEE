@@ -38,6 +38,42 @@ st.markdown("""
     }
     /* ---------------------------------------------------- */
     
+    /* [브랜딩 박스 디자인] */
+    .brand-box {
+        background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+        color: #FFFFFF;
+        padding: 24px 20px;
+        border-radius: 12px;
+        text-align: center;
+        margin-bottom: 24px;
+        box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.1), 0 4px 6px -4px rgba(15, 23, 42, 0.1);
+    }
+    .brand-title {
+        font-size: 1.8rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+        color: #FFFFFF;
+    }
+    .brand-subtitle {
+        font-size: 0.8rem;
+        color: #94A3B8;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+    }
+    .brand-description {
+        font-size: 0.85rem;
+        line-height: 1.5;
+        color: #E2E8F0;
+        background-color: rgba(255, 255, 255, 0.08);
+        padding: 10px 15px;
+        border-radius: 8px;
+        display: inline-block;
+        max-width: 90%;
+        margin: 0 auto;
+    }
+    
     /* 성과압박 카드 (텍스트 크기 축소) */
     .sp-card {
         background-color: #FFF5F2;
@@ -102,7 +138,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 2. 업데이트된 최종 문항 데이터 정의
+# 2. 문항 데이터 정의
 sp_questions = [
     "좋은 성적을 받아야 한다는 부담을 느꼈다.",
     "기대한 성적을 받지 못할까 봐 걱정한 적이 있었다.",
@@ -140,31 +176,29 @@ def reset_survey():
 # --- [ 화면 1: 설문지 작성 화면 ] ---
 if not st.session_state.show_result:
     
+    # [수정] PFI 공식 브랜드 박스 탑재 (세련된 다크톤 디자인 블록)
     st.markdown("""
-    <div style="text-align: center; margin-bottom: 20px; word-break: keep-all;">
-        <h1 style="color: #0F172A; font-weight: 700; font-size: 1.7rem; margin-bottom: 6px;">
-            🧘 청소년 피로도 지수(PFI) 자가진단
-        </h1>
-        <p style="color: #64748B; font-size: 0.85rem; line-height: 1.4;">
-            스스로를 다그치는 성과압박(SP)과 나의 충전 에너지인 회복역량(RC)을 다차원적으로 평가하여<br>
-            현재 나의 심리적 피로도를 정밀하게 측정합니다.
-        </p>
+    <div class="brand-box">
+        <div class="brand-title">🧘 PFI</div>
+        <div class="brand-subtitle">Psychological Fatigue Index</div>
+        <div class="brand-description">
+            본 검사는 학업 성과압박과 회복역량을 바탕으로 현재의 심리적 피로 수준을 예측하기 위한 자가진단 도구입니다.
+        </div>
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown("---")
     
-    # [수정] 피로도 조사에 맞게 현재형(~다)으로 옵션 변경
     options = ["전혀 그렇지 않다", "그렇지 않다", "보통이다", "그렇다", "매우 그렇다"]
     score_map = {"전혀 그렇지 않다": 1, "그렇지 않다": 2, "보통이다": 3, "그렇다": 4, "매우 그렇다": 5}
     
     with st.form("pfi_survey_form"):
-        # Section 1. 성과압박 (8문항)
+        # Section 1. 학업 성과압박 (AP)
         st.markdown("""
         <div class="sp-card">
-            <h4 style="color: #D32F2F; font-weight: 700;">Section 1. 성과압박 (Success Pressure, SP)</h4>
+            <h4 style="color: #D32F2F; font-weight: 700;">Section 1. 학업 성과압박 (Academic Performance Pressure, AP)</h4>
             <p style="color: #C62828; line-height: 1.4;">
-                다음 문항은 최근 한 달 동안 학교생활과 학업을 하면서 느낀 경험에 관한 내용입니다. 각 문항을 읽고 자신의 경험과 가장 가까운 정도를 선택해 주세요.
+                다음 문항은 평소 학업으로 인한 피로를 회복하는 방식과 회복 역량에 관한 내용입니다. 자신의 평소 모습과 가장 가까운 정도를 선택해 주세요.
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -178,7 +212,7 @@ if not st.session_state.show_result:
             
         st.markdown("---")
         
-        # [수정] Section 2. 명칭 및 안내 문구 교체
+        # Section 2. 회복역량 (RC)
         st.markdown("""
         <div class="ra-card">
             <h4 style="color: #2E7D32; font-weight: 700;">Section 2. 회복역량 (Recovery Capacity, RC)</h4>
@@ -197,15 +231,15 @@ if not st.session_state.show_result:
             
         st.markdown("---")
         
-        # Section 3. 주관적 인지 피로도 (분석용 선택 문항)
+        # Section 3. 주관적 피로도 (Subjective Fatigue)
         st.markdown("""
         <div style="background-color: #F8FAFC; border-left: 5px solid #64748B; padding: 14px 16px; border-radius: 10px; margin-bottom: 16px; word-break: keep-all;">
-            <h4 style="color: #334155; margin: 0 0 4px 0; font-weight: 700; font-size: 0.95rem;">Section 3. 주관적 피로도 (Self-Perceived Fatigue)</h4>
+            <h4 style="color: #334155; margin: 0 0 4px 0; font-weight: 700; font-size: 0.95rem;">Section 3. 주관적 피로도 (Subjective Fatigue)</h4>
             <p style="color: #475569; font-size: 0.8rem; margin: 0;">스스로 인지하고 있는 현재의 전반적인 에너지 상태를 선택적으로 체크합니다.</p>
         </div>
         """, unsafe_allow_html=True)
         
-        st.markdown('<p class="q-text"><b>Q19.</b> 현재 나의 전반적인 피로 수준은 어느 정도라고 생각하나요?</p>', unsafe_allow_html=True)
+        st.markdown('<p class="q-text"><b>Q19.</b> 현재 자신의 전반적인 피로 수준을 선택해 주세요.</p>', unsafe_allow_html=True)
         subjective_options = ["매우 낮다", "낮다", "보통이다", "높다", "매우 높다"]
         subjective_choice = st.radio("subjective_fatigue", options=subjective_options, index=None, horizontal=True, label_visibility="collapsed")
         
@@ -329,7 +363,7 @@ else:
     </div>
     """, unsafe_allow_html=True)
 
-    # [유형, 점수 카드 구성] (RA 표기를 RC/회복역량으로 유기적으로 시각화)
+    # 성과압박(SP) 명칭을 리포트 화면에서도 학업 성과압박(AP)으로 명확히 표기
     st.markdown(f"""
     <div class="result-card" style="border-top: 5px solid {status_color};">
         <div style="text-align: center; margin-bottom: 12px;">
@@ -340,7 +374,7 @@ else:
         <hr style="border: 0; border-top: 1px solid #E2E8F0; margin: 12px 0;">
         <div style="display: flex; justify-content: space-around; text-align: center;">
             <div>
-                <p style="margin: 0; color: #E64A19; font-size: 0.75rem; font-weight: 600;">📈 성과압박 평균 (SP)</p>
+                <p style="margin: 0; color: #E64A19; font-size: 0.75rem; font-weight: 600;">📈 학업 성과압박 평균 (AP)</p>
                 <p style="margin: 3px 0 0 0; font-size: 1.1rem; font-weight: 700; color: #1E293B;">{sp_avg:.2f} <span style="font-size: 0.75rem; font-weight: 400; color: #94A3B8;">/ 5</span></p>
             </div>
             <div style="border-left: 1px solid #E2E8F0;"></div>
@@ -389,7 +423,7 @@ else:
 
     st.markdown("---")
 
-    # 6. 피로도 유형 총괄 표 구현
+    # 6. 피로도 유형 핵심 행동 한눈에 보기
     st.markdown("### 📋 피로도 유형 핵심 행동 한눈에 보기")
     
     summary_data = {
