@@ -450,3 +450,16 @@ st.markdown("""
         ✉️ <b>문의:</b> <a href="mailto:241511@ggg.hs.kr" style="color: #64748B; text-decoration: underline; font-weight: 500;">241511@ggg.hs.kr</a>
     </div>
     """, unsafe_allow_html=True)
+
+# 스트림릿 호스팅 배지를 강제로 지우는 스크립트 주입
+st.components.v1.html(
+    """
+    <script>
+        // iframe 외부 부모창의 도메인(streamlit.io) 링크를 찾아 화면에서 감춥니다.
+        window.parent.document.querySelectorAll('a[href*="streamlit.io"]').forEach(el => {
+            el.style.display = 'none';
+        });
+    </script>
+    """,
+    height=0
+)
