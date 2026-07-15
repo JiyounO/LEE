@@ -1,12 +1,11 @@
-import streamlit as st
-import pandas as pd
-
+%%writefile app.py
 import streamlit as st
 import pandas as pd
 
 # 1. 웹페이지 기본 설정 및 미려한 CSS 스타일
 st.set_page_config(page_title="청소년 피로도 지수(PFI) 진단", page_icon="🧘", layout="centered")
 
+# [글자 크기를 줄이고 깔끔한 UI를 연출한 CSS]
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=300;400;500;700&display=swap');
@@ -103,6 +102,7 @@ st.markdown("""
     }
     </style>
     """, unsafe_allow_html=True)
+
 # 2. 업데이트된 최종 문항 데이터 정의
 sp_questions = [
     "좋은 성적을 받아야 한다는 부담을 느꼈다.",
@@ -115,17 +115,18 @@ sp_questions = [
     "휴식을 취하면서도 공부를 해야 한다는 생각이 자주 들었다."
 ]
 
+# [수정] 새로 보내주신 Q9 ~ Q18 회복경험 문항으로 교체 완료
 ra_questions = [
-    "공부를 잠시 잊고 편안하게 쉬는 시간을 가졌다.",
-    "충분한 휴식을 취했다고 느꼈다.",
-    "학업으로 인한 부담감을 내려놓고 쉴 수 있었다.",
-    "여가 시간을 보내며 재충전할 수 있었다.",
-    "내가 하고 싶은 활동을 할 시간을 가졌다.",
-    "편안한 활동을 하며 긴장을 풀 수 있었다.",
-    "공부와 휴식 시간을 스스로 조절할 수 있었다.",
-    "힘들 때 편하게 이야기할 수 있는 사람이 있었다.",
-    "하루를 마친 뒤 피로가 어느 정도 해소되었다고 느꼈다.",
-    "다음 날을 시작할 에너지가 충분하다고 느꼈다."
+    "나는 바쁜 일정 속에서도 충분히 쉬는 시간을 확보하는 편이다.",
+    "휴식을 취한 후에는 다시 집중할 수 있는 힘을 회복하는 편이다.",
+    "학업으로 스트레스를 받을 때에도 잠시 쉬며 마음을 가라앉힐 수 있다.",
+    "취미나 여가 활동을 통해 스트레스를 해소하는 편이다.",
+    "바쁜 일정 속에서도 내가 하고 싶은 활동을 할 시간을 마련하는 편이다.",
+    "나에게 맞는 스트레스 해소 방법이 있다.",
+    "나는 공부와 휴식의 균형을 잘 유지하는 편이다.",
+    "힘들 때 고민을 나누거나 도움을 요청할 수 있는 사람이 있다.",
+    "충분히 쉬면 피로가 회복되는 편이다.",
+    "나는 평소 활력을 느끼며 하루를 시작하는 편이다."
 ]
 
 # 세션 상태 제어
@@ -173,7 +174,6 @@ if not st.session_state.show_result:
         sp_answers = []
         for i, q in enumerate(sp_questions):
             st.markdown(f'<p class="q-text"><b>Q{i+1}.</b> {q}</p>', unsafe_allow_html=True)
-            # [수정] index=None으로 설정하여 초기 체크상태 해제
             choice = st.radio(f"sp_{i}", options=options, index=None, horizontal=True, label_visibility="collapsed")
             sp_answers.append(choice)
             st.markdown("<div style='margin-bottom: 10px;'></div>", unsafe_allow_html=True)
@@ -193,7 +193,6 @@ if not st.session_state.show_result:
         ra_answers = []
         for i, q in enumerate(ra_questions):
             st.markdown(f'<p class="q-text"><b>Q{i+9}.</b> {q}</p>', unsafe_allow_html=True)
-            # [수정] index=None으로 설정하여 초기 체크상태 해제
             choice = st.radio(f"ra_{i}", options=options, index=None, horizontal=True, label_visibility="collapsed")
             ra_answers.append(choice)
             st.markdown("<div style='margin-bottom: 10px;'></div>", unsafe_allow_html=True)
@@ -210,7 +209,6 @@ if not st.session_state.show_result:
         
         st.markdown('<p class="q-text"><b>Q19.</b> 현재 나의 전반적인 피로 수준은 어느 정도라고 생각하나요?</p>', unsafe_allow_html=True)
         subjective_options = ["매우 낮다", "낮다", "보통이다", "높다", "매우 높다"]
-        # [수정] index=None으로 설정하여 초기 체크상태 해제
         subjective_choice = st.radio("subjective_fatigue", options=subjective_options, index=None, horizontal=True, label_visibility="collapsed")
         
         st.markdown("---")
@@ -218,7 +216,7 @@ if not st.session_state.show_result:
         submit_btn = st.form_submit_button("🔍 내 피로도 상태 분석하기", use_container_width=True)
         
     if submit_btn:
-        # [수정] 필수 질문 답변 여부 검증 (답변이 안 된 None 값이 하나라도 있을 경우)
+        # 필수 질문 답변 여부 검증
         if None in sp_answers or None in ra_answers or subjective_choice is None:
             st.error("⚠️ 아직 답변하지 않은 문항이 있습니다. 모든 질문에 답한 뒤 다시 제출해 주세요!")
         else:
@@ -282,7 +280,7 @@ else:
             "🌿 **회복 시간을 일정처럼 예약해 보세요.**  \n→ 시험 기간에도 휴식 시간을 '남으면 쉬는 시간'이 아니라 계획된 일정으로 남겨두세요.",
             "🌿 **회복 효과가 컸던 활동 하나를 계속 이어가세요.**  \n→ 산책, 운동, 음악 감상 등 나에게 잘 맞는 회복 방법은 바꾸기보다 꾸준히 유지하는 것이 중요합니다."
         ]
-        message_to_me = "회복은 성과를 방해하는 시간이 아니라, 성과를 오래 지속하게 하는 힘입니다. 지금의 균형을 지켜가는 것이 가장 큰 경쟁력이 될 수 있습니다."
+        message_to_me = "회복은 성과와 대립하는 시간이 아니라, 성과를 더 오랫동안 지속하게 하는 원동력입니다. 지금의 멋진 균형을 지켜가는 것이 가장 좋은 공부 습관입니다."
         
     elif sp_avg >= threshold and ra_avg >= threshold:
         # 🎯 Challenge Type (도전형)
@@ -293,7 +291,7 @@ else:
         
         state_desc = "높은 목표 의식과 회복 능력을 함께 갖춘 상태입니다. 다만 목표가 계속 높아질수록 자신에게 요구하는 기준도 함께 높아질 수 있습니다."
         proposals = [
-            "🎯 **오늘 해야 할 일과 하면 좋은 일을 구분해 보세요.**  \n→ 모든 계획을 반드시 달성해야 한다는 부담을 줄이면 피로 누적을 예방할 수 있습니다.",
+            "🎯 **오늘 해야 할 일과 하면 좋은 일을 구분해 보세요.**  \n→ 모든 계획을 반드시 완벽히 해내야 한다는 부담을 줄이면 피로 누적을 예방할 수 있습니다.",
             "🎯 **하루를 마무리하며 결과보다 과정을 기록해 보세요.**  \n→ '몇 점을 받았는가'보다 '어떤 노력을 했는가'를 돌아보는 습관이 성과 압박을 줄이는 데 도움이 됩니다."
         ]
         message_to_me = "높은 목표를 향해 나아가는 힘은 큰 장점입니다. 하지만 오래 달리는 사람은 속도를 조절할 줄 아는 사람입니다."
@@ -310,7 +308,7 @@ else:
             "⚡ **해야 할 일 목록에서 '미뤄도 되는 일' 한 가지를 지워보세요.**  \n→ 모든 일을 같은 중요도로 다루지 않는 것만으로도 부담을 줄일 수 있습니다.",
             "⚡ **공부 시간을 늘리기보다 집중이 잘되는 시간을 찾아보세요.**  \n→ 시간의 양보다 집중의 질을 높이는 것이 더 효율적일 수 있습니다."
         ]
-        message_to_me = "잠시 속도를 늦추는 것은 포기가 아닙니다. 더 오래 나아가기 위한 선택입니다."
+        message_to_me = "잠시 속도를 늦추는 것은 포기가 아닙니다. 더 오래 나아가기 위한 현명한 선택입니다."
 
     else: # sp_avg < threshold and ra_avg < threshold
         # 🌧 Fatigue Type (피로 누적 유형)
@@ -356,7 +354,7 @@ else:
     </div>
     """, unsafe_allow_html=True)
     
-    # 4. 피로 위험도 수준 카드 (결과 카드 바로 밑에 배치, 글씨 크기 축소)
+    # 4. 피로 위험도 수준 카드
     st.markdown(f"""
     <div style="background-color: #FAFAFA; border-left: 5px solid {risk_color}; border-radius: 10px; padding: 14px 16px; margin-top: 15px; word-break: keep-all;">
         <span style="color: {risk_color}; font-weight: 700; font-size: 0.8rem;">⚠️ 피로 위험도 수준</span>
@@ -374,7 +372,6 @@ else:
     
     st.markdown("### 💡 피로 인식 격차 분석 (PFI vs 주관적 체감)")
     
-    # [주관적 피로 문항 내 모든 볼드체(**) 제거 및 차분한 네이비/인디고 그레이 적용]
     if gap >= 20:
         gap_desc = f"현재 검사상 측정된 객관적 피로 지수({pfi_percentage}점)에 비해 본인이 느끼는 주관적 피로({sub_text})가 상대적으로 매우 낮게 나타납니다. 이는 피로를 의식적으로 무시하며 계속 달리는 과적응(Over-adaptation) 상태이거나 한병철 철학에서 말하는 '자기착취형 성과주체'의 전형적인 모습일 수 있습니다. 몸과 마음이 보내는 미세한 피로 신호에 더 예민하게 주의를 기울여 보세요."
         gap_bg = "#FFF9E6"
@@ -415,7 +412,7 @@ else:
     
     st.markdown("---")
     
-    # 7. 개인 유형별 상세 진단 리포트 출력 (글씨 크기 및 여백 소폭 감소)
+    # 7. 개인 유형별 상세 진단 리포트 출력
     st.markdown(f"### 상세 분석: {type_emoji} {type_title}")
     
     # 상태 진단란
@@ -442,7 +439,7 @@ else:
 
     st.markdown("---")
 
-    # 8. 전체 공통 메시지 (결과 페이지 가장 하단 배치, 쌍따옴표 제거)
+    # 8. 전체 공통 메시지
     st.markdown("""
     <div style="background-color: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 12px; padding: 18px 20px; text-align: center; margin-top: 20px; margin-bottom: 20px; word-break: keep-all;">
         <h4 style="margin: 0 0 8px 0; color: #475569; font-weight: 700; font-size: 0.95rem;">💬 피로를 마주하는 우리의 자세</h4>
@@ -467,16 +464,3 @@ st.markdown("""
         ✉️ <b>문의:</b> <a href="mailto:241511@ggg.hs.kr" style="color: #64748B; text-decoration: underline; font-weight: 500;">241511@ggg.hs.kr</a>
     </div>
     """, unsafe_allow_html=True)
-
-# 스트림릿 호스팅 배지를 강제로 지우는 스크립트 주입
-st.components.v1.html(
-    """
-    <script>
-        // iframe 외부 부모창의 도메인(streamlit.io) 링크를 찾아 화면에서 감춥니다.
-        window.parent.document.querySelectorAll('a[href*="streamlit.io"]').forEach(el => {
-            el.style.display = 'none';
-        });
-    </script>
-    """,
-    height=0
-)
