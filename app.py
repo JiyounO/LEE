@@ -42,17 +42,24 @@ st.markdown("""
     .brand-box {
         background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
         color: #FFFFFF;
-        padding: 24px 20px;
+        padding: 26px 20px;
         border-radius: 12px;
         text-align: center;
         margin-bottom: 24px;
         box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.1), 0 4px 6px -4px rgba(15, 23, 42, 0.1);
     }
+    .brand-main-title {
+        font-size: 1.15rem;
+        font-weight: 500;
+        color: #38BDF8; /* 산뜻한 블루 계열 강조색 */
+        margin-bottom: 2px;
+        letter-spacing: 0.5px;
+    }
     .brand-title {
-        font-size: 1.8rem;
+        font-size: 2.1rem;
         font-weight: 800;
-        letter-spacing: 1px;
-        margin-bottom: 4px;
+        letter-spacing: 1.5px;
+        margin-bottom: 2px;
         color: #FFFFFF;
     }
     .brand-subtitle {
@@ -60,7 +67,7 @@ st.markdown("""
         color: #94A3B8;
         font-weight: 500;
         letter-spacing: 0.5px;
-        margin-bottom: 12px;
+        margin-bottom: 14px;
     }
     .brand-description {
         font-size: 0.85rem;
@@ -176,9 +183,10 @@ def reset_survey():
 # --- [ 화면 1: 설문지 작성 화면 ] ---
 if not st.session_state.show_result:
     
-    # [수정] PFI 공식 브랜드 박스 탑재 (세련된 다크톤 디자인 블록)
+    # [수정] 청소년 피로도 지수(PFI) 진단을 상단에 배치하고, PFI 공인 정의 박스로 매끄럽게 연결
     st.markdown("""
     <div class="brand-box">
+        <div class="brand-main-title">청소년 피로도 지수 진단</div>
         <div class="brand-title">🧘 PFI</div>
         <div class="brand-subtitle">Psychological Fatigue Index</div>
         <div class="brand-description">
