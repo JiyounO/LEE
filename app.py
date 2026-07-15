@@ -1,10 +1,12 @@
 import streamlit as st
 import pandas as pd
 
+import streamlit as st
+import pandas as pd
+
 # 1. 웹페이지 기본 설정 및 미려한 CSS 스타일
 st.set_page_config(page_title="청소년 피로도 지수(PFI) 진단", page_icon="🧘", layout="centered")
 
-# [글자 크기를 줄이고 깔끔한 UI를 연출한 CSS (하단 배지 제거 버전)]
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=300;400;500;700&display=swap');
@@ -14,13 +16,29 @@ st.markdown("""
         word-break: keep-all; /* 단어 단위 줄바꿈 */
     }
     
-    /* ------------------------------------------- */
-    /* 🚀 스트림릿 기본 하단 배지 및 푸터 강제 제거 */
-    footer {visibility: hidden !important;}
-    div[data-testid="stDecoration"] {visibility: hidden !important;}
-    [data-testid="stToolbar"] {visibility: hidden !important;}
-    div.embeddedAppMetaInfoBar_container__DxxL1 {visibility: hidden !important;}
-    /* ------------------------------------------- */
+    /* ---------------------------------------------------- */
+    /* 🔥 하단 배지 및 'Hosted with Streamlit' 푸터 완벽 박멸 CSS */
+    footer {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    #MainMenu, header, .viewerBadge, [data-testid="stDecoration"] {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    div[class*="viewerBadge"] {
+        display: none !important;
+    }
+    /* 모바일 하단 배지 박스 타겟팅 */
+    div[class*="embeddedAppMetaInfoBar_container"] {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+    }
+    /* ---------------------------------------------------- */
     
     /* 성과압박 카드 (텍스트 크기 축소) */
     .sp-card {
@@ -85,7 +103,6 @@ st.markdown("""
     }
     </style>
     """, unsafe_allow_html=True)
-
 # 2. 업데이트된 최종 문항 데이터 정의
 sp_questions = [
     "좋은 성적을 받아야 한다는 부담을 느꼈다.",
