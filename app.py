@@ -1,4 +1,3 @@
-%%writefile app.py
 import streamlit as st
 
 # 1. 웹페이지 기본 설정 및 미려한 CSS 스타일 입히기
